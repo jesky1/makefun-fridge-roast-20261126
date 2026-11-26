@@ -1,0 +1,1 @@
+{"description":"One-line roast of a smart fridge that locks its leftovers after midnight, for make.fun","license":"MIT","name":"makefun-fridge-roast-20261126","private":true,"scripts":{"start":"node main.ts","test":"node --test main.test.ts"},"type":"module","version":"1.0.0"}
