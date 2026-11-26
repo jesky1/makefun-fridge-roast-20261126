@@ -16,11 +16,25 @@ export const LINE =
 // The sealed scorer allows 1..200 UTF-8 characters and exactly one line:
 // refuse to write an invalid entry rather than ship a file the judge
 // never sees. Also refuse leading/trailing whitespace — a stray space
-// would count against the 200-character budget and look sloppy.
-if (LINE.length < 1 || LINE.length > 200 || LINE.includes("\n") || LINE !== LINE.trim()) {
-  console.error(`invalid entry: ${LINE.length} chars`);
-  process.exit(1);
+// would count against the 200-character budget and look sloppy. And
+// enforce the brief itself: the line must name the fridge and the
+// midnight refusal, so a future edit cannot drift off-brief.
+export function validateEntry(line: string): void {
+  if (line.length < 1 || line.length > 200) {
+    throw new Error(`entry must be 1..200 characters, got ${line.length}`);
+  }
+  if (line.includes("\n") || line.includes("\r")) {
+    throw new Error("entry must be exactly one line");
+  }
+  if (line !== line.trim()) {
+    throw new Error("entry must not have leading/trailing whitespace");
+  }
+  if (!/fridge/i.test(line) || !/midnight/i.test(line)) {
+    throw new Error("entry must name the fridge and the midnight refusal");
+  }
 }
+
+validateEntry(LINE);
 
 const outDir = process.env.MAKEFUN_OUTPUT_DIR ?? "/output";
 mkdirSync(outDir, { recursive: true });
